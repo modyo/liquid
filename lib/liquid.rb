@@ -74,23 +74,4 @@ Dir[File.dirname(__FILE__) + '/liquid/tags/*.rb'].each { |f| require f }
 
 ActionView::Template.register_template_handler :liquid, LiquidView
 
-# Modyo Filters
-Liquid::Template.register_filter(Liquid::Filters::SiteFilter)
-Liquid::Template.register_filter(Liquid::Filters::UsersFilter)
-Liquid::Template.register_filter(Liquid::Filters::AchievementFilter)
-Liquid::Template.register_filter(Liquid::Filters::WidgetFilter)
-Liquid::Template.register_filter(Liquid::Filters::MembershipFilter)
-Liquid::Template.register_filter(Liquid::Filters::InteractionFilter)
 
-# Modyo Blocks
-Liquid::Template.register_tag('html5', Liquid::Blocks::Html5Block)
-Liquid::Template.register_tag('meta', Liquid::Blocks::MetaBlock)
-Liquid::Template.register_tag('meta_mobile', Liquid::Blocks::MetaMobileBlock)
-
-#Modyo Tags
-Liquid::Template.register_tag('snippet', Liquid::Tags::Snippet)
-Liquid::Template.register_tag('feed_snippet', Liquid::Tags::FeedSnippet)
-Liquid::Template.register_tag('is_current_page', Liquid::Tags::IsCurrentPage)
-Liquid::Template.register_tag('interactions_filter', Liquid::Tags::InteractionsFilter)
-Liquid::Template.register_tag('interactions_status_filter', Liquid::Tags::InteractionsStatusFilter)
-Liquid::Template.register_tag('interactions_order', Liquid::Tags::InteractionsOrder)
