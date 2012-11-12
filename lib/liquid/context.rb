@@ -22,8 +22,22 @@ module Liquid
       @errors         = []
       @rethrow_errors = rethrow_errors
       squash_instance_assigns_with_environments
+      initialize_global_variables
 
       @interrupts = []
+    
+    end
+
+    def initialize_global_variables
+      @site = self['site'].source if self['site']
+      @membership = self['membership'].source if self['membership']
+      @user = self['user'].source if self['user']
+      @profile = self['profile'].source if self['profile']
+      @category = self['category'].source if self['category']
+      @account = self['account'].source if self['account']
+      @geo_location = self['geo_location'].source if self['geo_location']
+      @locale = self['locale'] if self['locale']
+      @pluginship = self['pluginship'].source if self['pluginship']
     end
 
     def strainer

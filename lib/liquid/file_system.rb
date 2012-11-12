@@ -40,28 +40,32 @@ module Liquid
     
     def read_template_file(template_path, context)
       full_path = full_path(template_path)
-      raise FileSystemError, "No such template '#{template_path}'" unless File.exists?(full_path)
-      
+
       # Check in the DB first
       if template = context.registers[:action_view].controller.site.current_themeship.get_snippet_template(full_path)
         return template.body
       end
 
-      File.read(full_path)
+      # Patch for liquid snippets
+      return context.registers[:action_view].lookup_context.find_template(full_path).source
     end
     
     def full_path(template_path)
+
       raise FileSystemError, "Illegal template name '#{template_path}'" unless template_path =~ /^[^.\/][a-zA-Z0-9_\/]+$/
       
       full_path = if template_path.include?('/')
-        File.join(@root, File.dirname(template_path), "_#{File.basename(template_path)}.html.liquid")
+        File.join(root, File.dirname(template_path), "_#{File.basename(template_path)}.html.liquid")
       else
-        File.join(@root, "_#{template_path}.html.liquid")
+        File.join(root, "_#{template_path}.html.liquid")
       end
-      
+
+      Rails.logger.debug full_path
+
       raise FileSystemError, "Illegal template path '#{File.expand_path(full_path)}'" unless File.expand_path(full_path) =~ /^#{File.expand_path(root)}/
       
       full_path
     end
   end
 end
+
