@@ -21,6 +21,7 @@
 
 require 'liquid'
 require 'extras/liquid_view'
+require 'extras/liquid_resolver'
 
 module Liquid
   FilterSeparator             = /\|/
