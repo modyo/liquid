@@ -14,7 +14,7 @@ module Liquid
   # This will parse the template with a LocalFileSystem implementation rooted at 'template_path'.
   class BlankFileSystem
     # Called by Liquid to retrieve a template file
-    def read_template_file(template_path, context)
+    def read_template_file(context, template_name)
       raise FileSystemError, "This liquid context does not allow includes."
     end
   end
@@ -42,6 +42,11 @@ module Liquid
       full_path = full_path(template_path)
       raise FileSystemError, "No such template '#{template_path}'" unless File.exists?(full_path)
       
+      # Check in the DB first
+      if template = context.registers[:action_view].controller.site.current_themeship.get_snippet_template(full_path)
+        return template.body
+      end
+
       File.read(full_path)
     end
     
@@ -49,9 +54,9 @@ module Liquid
       raise FileSystemError, "Illegal template name '#{template_path}'" unless template_path =~ /^[^.\/][a-zA-Z0-9_\/]+$/
       
       full_path = if template_path.include?('/')
-        File.join(root, File.dirname(template_path), "_#{File.basename(template_path)}.liquid")
+        File.join(@root, File.dirname(template_path), "_#{File.basename(template_path)}.html.liquid")
       else
-        File.join(root, "_#{template_path}.liquid")
+        File.join(@root, "_#{template_path}.html.liquid")
       end
       
       raise FileSystemError, "Illegal template path '#{File.expand_path(full_path)}'" unless File.expand_path(full_path) =~ /^#{File.expand_path(root)}/
