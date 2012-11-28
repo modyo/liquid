@@ -42,7 +42,7 @@ module Liquid
       full_path = full_path(template_path)
 
       # Check in the DB first
-      if template = context.registers[:action_view].controller.site.current_themeship.get_snippet_template(full_path)
+      if template = context.registers[:action_view].controller.themeship.get_snippet_template(full_path)
         return template.body
       end
 
