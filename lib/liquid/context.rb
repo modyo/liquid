@@ -14,7 +14,7 @@ module Liquid
   #   context['bob']  #=> nil  class Context
   class Context
     attr_reader :scopes, :errors, :registers, :environments
-    attr_accessor :site, :membership, :user, :profile, :category, :account, :location, :iso2, :pluginship, :locale
+    attr_accessor :site, :theme, :themeship, :breadcrumbs, :membership, :user, :profile, :category, :account, :location, :iso2, :pluginship, :locale
 
     def initialize(environments = {}, outer_scope = {}, registers = {}, rethrow_errors = false)
       @environments   = [environments].flatten
@@ -31,7 +31,10 @@ module Liquid
 
     def initialize_global_variables
       @site = self['site'].source if self['site']
+      @theme = self['theme'].source if self['theme']
+      @themeship = self['themeship'].source if self['themeship']
       @membership = self['membership'].source if self['membership']
+      @breadcrumbs = self['breadcrumbs'] if self['breadcrumbs']
       @user = self['user'].source if self['user']
       @profile = self['profile'].source if self['profile']
       @category = self['category'].source if self['category']
@@ -39,6 +42,7 @@ module Liquid
       @geo_location = self['geo_location'].source if self['geo_location']
       @locale = self['locale'] if self['locale']
       @pluginship = self['pluginship'].source if self['pluginship']
+      @current_app = self['current_app'].source if self['current_app']
     end
 
     def strainer

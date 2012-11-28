@@ -12,9 +12,9 @@ class LiquidResolver < ActionView::Resolver
     #    :partial => partial || false
     #}
 
-    if details[:site].present?
+    if details[:themeship].present?
 
-      views = details[:site].first.current_themeship.get_template("#{normalize_path(name, prefix)}.#{normalize_array(details[:formats]) ? normalize_array(details[:formats]).first : 'html'}.liquid")
+      views = details[:themeship].first.get_template("#{normalize_path(name, prefix)}.#{normalize_array(details[:formats]) ? normalize_array(details[:formats]).first : 'html'}.liquid")
 
       if views
         return views.map do |record|
