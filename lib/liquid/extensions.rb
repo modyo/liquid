@@ -1,12 +1,6 @@
 require 'time'
 require 'date'
 
-class ActionDispatch::Routing::RoutesProxy
-  def to_liquid
-    self
-  end
-end
-
 class String # :nodoc:
   def to_liquid
     self
