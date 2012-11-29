@@ -12,27 +12,17 @@ class LiquidResolver < ActionView::Resolver
     #    :partial => partial || false
     #}
 
-    Rails.logger.debug("[LiquidResolver] Details: #{details.inspect}")
-    Rails.logger.debug("[LiquidResolver] ----------------------------------")
-    Rails.logger.debug("[LiquidResolver] Themeship: #{details[:themeship]}")
-
     if details[:themeship].present?
-
-      Rails.logger.debug("[LiquidResolver] Themeship found")
 
       views = details[:themeship].first.get_template("#{normalize_path(name, prefix)}.#{normalize_array(details[:formats]) ? normalize_array(details[:formats]).first : 'html'}.liquid")
 
       if views
 
-        Rails.logger.debug("[LiquidResolver] Template #{name} found")
-
         return views.map do |record|
           initialize_template(record)
         end
       end
-
-    else
-      Rails.logger.debug("[LiquidResolver] Themeship not found")
+      
     end
 
     []
