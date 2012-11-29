@@ -42,7 +42,7 @@ module Liquid
       @geo_location = self['geo_location'].source if self['geo_location']
       @locale = self['locale'] if self['locale']
       @pluginship = self['pluginship'].source if self['pluginship']
-      @current_app = self['current_app'].source if self['current_app']
+      @current_app = self['current_app'] if self['current_app']
     end
 
     def strainer
