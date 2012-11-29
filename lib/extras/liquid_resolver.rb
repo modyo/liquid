@@ -12,6 +12,10 @@ class LiquidResolver < ActionView::Resolver
     #    :partial => partial || false
     #}
 
+    Rails.logger.debug("[LiquidResolver] Details: #{details.inspect}")
+    Rails.logger.debug("[LiquidResolver] ----------------------------------")
+    Rails.logger.debug("[LiquidResolver] Themeship: #{details[:themeship]}")
+
     if details[:themeship].present?
 
       Rails.logger.debug("[LiquidResolver] Themeship found")
