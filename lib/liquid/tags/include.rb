@@ -25,6 +25,9 @@ module Liquid
     
     def render(context)
       source = _read_template_from_file_system(context)
+
+      source.force_encoding('utf-8') if source.respond_to?(:force_encoding)
+
       partial = Liquid::Template.parse(source)
       variable = context[@variable_name || @template_name[1..-2]]
       
