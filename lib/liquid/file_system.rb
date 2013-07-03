@@ -43,7 +43,7 @@ module Liquid
 
       # Check in the DB first
       if template = context.registers[:action_view].controller.themeship.get_snippet_template(full_path)
-        return template.body
+        return template.body        
       end
 
       # Patch for liquid snippets
