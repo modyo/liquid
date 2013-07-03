@@ -29,17 +29,7 @@ class LiquidView
     end
     assigns.merge!(local_assigns.stringify_keys)
 
-
-    locale = @view.controller.locale
-    location = @view.controller.location ? @view.controller.location.current_country_short : ''
-
-    key = [:site, @view.controller.site.versioned_cache_key, locale, location, template.path, @view.controller.request.url] if @view.controller.site
-
-    Rails.cache.fetch(key, :expires_in => 1.hour) do
-      # Init the template filesystem for snippets and includes
-      Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
-      
-      template = Modyo::Instrumentation::Agent.inject(template)
+    if @view.controller.user
 
       if template.instance_of?(ActionView::InlineTemplate)
         liquid = ::Rails.cache.fetch(Digest::SHA512.hexdigest(template.source)) do
@@ -48,7 +38,7 @@ class LiquidView
         end
 
         Marshal.load(liquid).render(assigns,
-          :filters => [], 
+          :filters => [],
           :registers => {
             :action_view => @view,
             :controller => @view.controller
@@ -57,12 +47,50 @@ class LiquidView
 
         liquid = Liquid::Template.parse(source)
         liquid.render(assigns,
-          :filters => [], 
+          :filters => [],
           :registers => {
             :action_view => @view,
             :controller => @view.controller
           })
       end
+
+    else  
+
+      locale = @view.controller.locale
+      location = @view.controller.location ? @view.controller.location.current_country_short : ''
+
+      key = [:site, @view.controller.site.versioned_cache_key, locale, location, template.path, @view.controller.request.url] if @view.controller.site
+
+      Rails.cache.fetch(key, :expires_in => 1.hour) do
+        # Init the template filesystem for snippets and includes
+        Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
+        
+        template = Modyo::Instrumentation::Agent.inject(template)
+
+        if template.instance_of?(ActionView::InlineTemplate)
+          liquid = ::Rails.cache.fetch(Digest::SHA512.hexdigest(template.source)) do
+            liquid = Liquid::Template.parse(source)
+            Marshal.dump(liquid)
+          end
+
+          Marshal.load(liquid).render(assigns,
+            :filters => [], 
+            :registers => {
+              :action_view => @view,
+              :controller => @view.controller
+            })
+        else
+
+          liquid = Liquid::Template.parse(source)
+          liquid.render(assigns,
+            :filters => [], 
+            :registers => {
+              :action_view => @view,
+              :controller => @view.controller
+            })
+        end
+      end
+
     end
    
   end
