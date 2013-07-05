@@ -34,8 +34,8 @@ class LiquidView
  
     template = Modyo::Instrumentation::Agent.inject(template)
 
-    # Check if there is a membership present. Public pages are fully cached.
-    if @view.controller.membership && !(@view.controller.request.url =~ /.css/ || @view.controller.request.url =~ /.js/)
+    # Check if there is a membership present. Public pages are fully cached
+    if @view.controller.membership && !(@view.controller.request.url =~ /\/stylesheets\/site./ || @view.controller.request.url =~ /\/javascript\/site./)
 
       liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template)]) { Liquid::Template.parse(template) }
       liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
