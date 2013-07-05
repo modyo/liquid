@@ -17,6 +17,9 @@ class LiquidView
 
   def initialize(view)
     @view = view
+
+    # Init the template filesystem for snippets and includes
+    Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
   end
 
   def render(template, local_assigns = { })
@@ -28,17 +31,27 @@ class LiquidView
       assigns["content_for_layout"] = @view.content_for(:layout)
     end
     assigns.merge!(local_assigns.stringify_keys)
-
-
-
-    # Init the template filesystem for snippets and includes
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
-
+ 
     template = Modyo::Instrumentation::Agent.inject(template)
 
-    liquid = Liquid::Template.parse(template)
-    liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
-   
+    # Check if there is a membership present. Public pages are fully cached.
+    if @view.controller.membership && !(@view.controller.request.url =~ /.css/ || @view.controller.request.url =~ /.js/)
+
+      liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template)]) { Liquid::Template.parse(template) }
+      liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
+    else
+      locale = @view.controller.locale
+      location = @view.controller.location ? @view.controller.location.current_country_short : ''
+
+      key = Digest::SHA256.hexdigest("site/#{@view.controller.site.versioned_cache_key}/#{locale}/#{location}/#{template}/#{@view.controller.request.url}") if @view.controller.site
+
+      Rails.cache.fetch(key, :expires_in => 1.hour) do
+         liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template)]) { Liquid::Template.parse(template) }
+
+         liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
+      end
+    end
+
   end
 
   def compilable?
