@@ -45,7 +45,7 @@ class LiquidView
 
       key = Digest::SHA256.hexdigest("site/#{@view.controller.site.versioned_cache_key}/#{locale}/#{location}/#{template}/#{@view.controller.request.url}") if @view.controller.site
 
-      Rails.cache.fetch(key, :expires_in => 1.hour) do
+      Rails.cache.fetch(key, :expires_in => 1.hour, :race_condition_ttl => 30.minutes) do
          liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template)]) { Liquid::Template.parse(template) }
 
          liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
