@@ -43,7 +43,9 @@ class LiquidView
       locale = @view.controller.locale
       location = @view.controller.location ? @view.controller.location.current_country_short : ''
 
-      key = Digest::SHA256.hexdigest("site/#{@view.controller.site.versioned_cache_key}/#{locale}/#{location}/#{template}/#{@view.controller.request.url}") if @view.controller.site
+      pluginship_key = @view.controller.pluginship ? @view.controller.pluginship.cache_key : '-'
+
+      key = Digest::SHA256.hexdigest("site/#{@view.controller.site.versioned_cache_key}/#{pluginship_key}/#{locale}/#{location}/#{template}/#{@view.controller.request.url}") if @view.controller.site
 
       Rails.cache.fetch(key, :expires_in => 1.hour, :race_condition_ttl => 30.minutes) do
          liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template), @view.controller.site.versioned_cache_key]) { Liquid::Template.parse(template) }
