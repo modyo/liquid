@@ -16,10 +16,7 @@ class LiquidView
   end
 
   def initialize(view)
-    @view = view
-
-    # Init the template filesystem for snippets and includes
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
+    @view = view    
   end
 
   def render(template, local_assigns = { })
@@ -37,6 +34,9 @@ class LiquidView
     # Check if there is a membership present. Public pages are fully cached
     if @view.controller.membership && !(@view.controller.request.url =~ /\/stylesheets\/site./ || @view.controller.request.url =~ /\/javascript\/site./)
 
+      # Init the template filesystem for snippets and includes
+      Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
+
       liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template), @view.controller.site.versioned_cache_key]) { Liquid::Template.parse(template) }
       liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
     else
@@ -48,6 +48,10 @@ class LiquidView
       key = Digest::SHA256.hexdigest("site/#{@view.controller.site.versioned_cache_key}/#{pluginship_key}/#{locale}/#{location}/#{template}/#{@view.controller.request.url}") if @view.controller.site
 
       Rails.cache.fetch(key, :expires_in => 1.hour, :race_condition_ttl => 30.minutes) do
+        
+         # Init the template filesystem for snippets and includes
+         Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
+
          liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template), @view.controller.site.versioned_cache_key]) { Liquid::Template.parse(template) }
 
          liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
