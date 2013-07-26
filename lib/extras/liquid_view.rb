@@ -37,7 +37,7 @@ class LiquidView
       # Init the template filesystem for snippets and includes
       Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
 
-      liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template), @view.controller.site.versioned_cache_key]) { Liquid::Template.parse(template) }
+      liquid = Liquid::Template.parse(template)
       liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
     else
       locale = @view.controller.locale
@@ -52,7 +52,7 @@ class LiquidView
          # Init the template filesystem for snippets and includes
          Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
 
-         liquid = Rails.cache.fetch([:template, Digest::SHA512.hexdigest(template), @view.controller.site.versioned_cache_key]) { Liquid::Template.parse(template) }
+         liquid = Liquid::Template.parse(template)
 
          liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
       end
