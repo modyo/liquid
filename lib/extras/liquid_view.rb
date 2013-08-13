@@ -39,9 +39,10 @@ class LiquidView
 
       liquid = Liquid::Template.parse(template)
       liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
+
     else
       locale = @view.controller.locale
-      location = @view.controller.location ? @view.controller.location.current_country_code : ''
+      location = @view.controller.geo_location ? @view.controller.geo_location.current_country_code : ''
 
       pluginship_key = @view.controller.pluginship ? @view.controller.pluginship.cache_key : '-'
 
