@@ -14,7 +14,7 @@ module Liquid
   #   context['bob']  #=> nil  class Context
   class Context
     attr_reader :scopes, :errors, :registers, :environments
-    attr_accessor :site, :theme, :themeship, :breadcrumbs, :membership, :user, :profile, :category, :account, :location, :iso2, :pluginship, :locale
+    attr_accessor :site, :theme, :themeship, :breadcrumbs, :membership, :user, :profile, :category, :account, :geo_location, :iso2, :pluginship, :locale
 
     def initialize(environments = {}, outer_scope = {}, registers = {}, rethrow_errors = false)
       @environments   = [environments].flatten
