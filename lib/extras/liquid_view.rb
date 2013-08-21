@@ -42,7 +42,7 @@ class LiquidView
 
     else
       locale = @view.controller.locale
-      location = @view.controller.location ? @view.controller.location.current_country_code : ''
+      location = @view.controller.geo_pluginship ? @view.controller.geo_pluginship.current_country_code : ''
 
       pluginship_key = @view.controller.pluginship ? @view.controller.pluginship.cache_key : '-'
 

@@ -14,7 +14,7 @@ module Liquid
   #   context['bob']  #=> nil  class Context
   class Context
     attr_reader :scopes, :errors, :registers, :environments
-    attr_accessor :site, :theme, :themeship, :breadcrumbs, :membership, :user, :profile, :category, :account, :location, :iso2, :pluginship, :locale
+    attr_accessor :site, :theme, :themeship, :breadcrumbs, :membership, :user, :profile, :category, :account, :geo_pluginship, :iso2, :pluginship, :locale
 
     def initialize(environments = {}, outer_scope = {}, registers = {}, rethrow_errors = false)
       @environments   = [environments].flatten
@@ -41,7 +41,7 @@ module Liquid
       @account = self['account'].source if self['account']
       @location = self['location'].source if self['location']
       @locale = self['locale'] if self['locale']
-      @pluginship = self['pluginship'].source if self['pluginship']
+      @pluginship = self['geo_pluginship'].source if self['geo_pluginship']
       @current_app = self['current_app'] if self['current_app']
     end
 
