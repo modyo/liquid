@@ -39,8 +39,8 @@ module Liquid
       @profile = self['profile'].source if self['profile']
       @category = self['category'].source if self['category']
       @account = self['account'].source if self['account']
-      @location = self['location'].source if self['location']
-      @locale = self['geo_location'] if self['geo_location']
+      @location = self['geo_location'].source if self['geo_location']
+      @locale = self['locale'] if self['locale']
       @pluginship = self['pluginship'].source if self['pluginship']
       @current_app = self['current_app'] if self['current_app']
     end
