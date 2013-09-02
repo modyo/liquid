@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version     = "2.4.1"
   s.platform    = Gem::Platform::RUBY
   s.summary     = "A secure, non-evaling end user template engine with aesthetic markup."
-  s.authors     = ["Tobias Luetke"]
+  s.authors     = ["Tobias Luetke - Antonio Silva"]
   s.email       = ["tobi@leetsoft.com"]
   s.homepage    = "http://www.liquidmarkup.org"
   #s.description = "A secure, non-evaling end user template engine with aesthetic markup."
