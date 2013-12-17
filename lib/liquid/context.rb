@@ -14,7 +14,7 @@ module Liquid
   #   context['bob']  #=> nil  class Context
   class Context
     attr_reader :scopes, :errors, :registers, :environments
-    attr_accessor :site, :theme, :themeship, :breadcrumbs, :membership, :user, :profile, :category, :account, :geo_location, :iso2, :pluginship, :locale
+    attr_accessor :site, :theme, :is_theme_preview, :themeship, :breadcrumbs, :membership, :user, :profile, :category, :account, :geo_location, :iso2, :pluginship, :locale
 
     def initialize(environments = {}, outer_scope = {}, registers = {}, rethrow_errors = false)
       @environments   = [environments].flatten
@@ -32,6 +32,7 @@ module Liquid
     def initialize_global_variables
       @site = self['site'].source if self['site']
       @theme = self['theme'].source if self['theme']
+      @is_theme_preview = self['is_theme_preview'] if self['is_theme_preview']
       @themeship = self['themeship'].source if self['themeship']
       @membership = self['membership'].source if self['membership']
       @breadcrumbs = self['breadcrumbs'] if self['breadcrumbs']

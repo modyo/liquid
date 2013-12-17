@@ -24,6 +24,8 @@ class LiquidView
 
     assigns = @view.assigns
 
+    Rails.logger.debug "[Debug] Template rendering"
+
     if @view.content_for?(:layout)
       assigns["content_for_layout"] = @view.content_for(:layout)
     end
@@ -34,6 +36,8 @@ class LiquidView
     # Check if there is a membership present. Public pages are fully cached
     if @view.controller.membership && !(@view.controller.request.url =~ /\/stylesheets\/site./ || @view.controller.request.url =~ /\/javascript\/site./)
 
+      Rails.logger.debug "[Debug] Template rendering without cache: #{@view.controller.request.url}"
+
       # Init the template filesystem for snippets and includes
       Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
 
@@ -41,6 +45,9 @@ class LiquidView
       liquid.render(assigns, :filters => [], :registers => { :action_view => @view, :controller => @view.controller })
 
     else
+
+      Rails.logger.debug "[Debug] Template rendering with cache: #{@view.controller.request.url}"
+
       locale = @view.controller.locale
       location = @view.controller.geo_location ? @view.controller.geo_location.current_country_code : ''
 
@@ -49,7 +56,9 @@ class LiquidView
       key = Digest::SHA256.hexdigest("site/#{@view.controller.site.versioned_cache_key}/#{pluginship_key}/#{locale}/#{location}/#{template}/#{@view.controller.request.url}") if @view.controller.site
 
       Rails.cache.fetch(key, :expires_in => 1.hour, :race_condition_ttl => 30.minutes) do
-        
+
+         Rails.logger.debug "[Debug] Fetching a fresh copy of #{@view.controller.request.url}"
+
          # Init the template filesystem for snippets and includes
          Liquid::Template.file_system = Liquid::LocalFileSystem.new('site')
 
